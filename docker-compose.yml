@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  rest-security:
+    build:
+      context: ./.docker/tomcat
+      dockerfile: Dockerfile
+    networks:
+      - login-api-client
+    ports:
+      - "8001:8080"
+    volumes:
+      - ./spring-crm-rest-security/target/ROOT.war:/usr/local/tomcat/webapps/ROOT.war
+    links:
+      - mysql
+
+  rest-client:
+    build:
+      context: ./.docker/tomcat1
+      dockerfile: Dockerfile
+    networks:
+      - login-api-client
+    ports:
+      - "80:80"
+      - "8000:8000"
+    volumes:
+      - ./crm-web-app-rest-client/target/ROOT.war:/usr/local/tomcat/webapps/ROOT.war
+
+  mysql:
+    build:
+      context: ./.docker/mysql
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+    networks:
+      login-api-client:
+    volumes:
+      - ./.docker/mysql/db:/var/lib/mysql
+      - ./.docker/mysql/scripts/:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=root
+
+networks:
+  login-api-client:
