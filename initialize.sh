@@ -17,7 +17,7 @@ mvn clean install
 cd ..
 #
 # if the file doesn't exist, try to create folder
-if [ ! -f ./.docker/mysql/scripts/02-customer-tracker.sql ]
+if [ ! -e ./.docker/mysql/scripts/02-customer-tracker.sql ]
 #
 then
   cp ./sql-scripts/02-customer-tracker.sql ./.docker/mysql/scripts/
